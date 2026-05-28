@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -2174,3 +2175,2181 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+    <title>DarkByte</title>
+    <!-- Emoji Picker Element for Real Emoji Support -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0a0a; /* Cinza Escuro original */
+            --text-color: #ffffff;
+            --accent-blue: #3b82f6;
+            --neon-glow: 0 0 15px rgba(59, 130, 246, 0.5);
+            --toolbar-bg: #111111;
+            --grid-color: rgba(255, 255, 255, 0.03);
+        }
+
+        body.light-theme {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --toolbar-bg: #f5f5f5;
+            --sales-card-bg: rgba(0, 0, 0, 0.04);
+            --sales-card-border: rgba(0, 0, 0, 0.12);
+            --sales-card-text: #111111;
+            --sales-card-muted: rgba(17, 17, 17, 0.65);
+            --sales-programming: #2563eb;
+            --sales-design: #be185d;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- INTRO OVERLAY --- */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+            overflow-y: hidden;
+            padding: 50px 20px;
+            box-sizing: border-box;
+        }
+
+        #intro-overlay.allow-scroll {
+            overflow-y: auto;
+            justify-content: flex-start;
+        }
+
+        #intro-overlay::-webkit-scrollbar {
+            width: 6px;
+        }
+        #intro-overlay::-webkit-scrollbar-track {
+            background: #000;
+        }
+        #intro-overlay::-webkit-scrollbar-thumb {
+            background: #1a1a1a; /* Mesma cor do fundo para ser discreta */
+            border-radius: 10px;
+        }
+
+        /* Background Effects - Fixo para não rolar junto */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 50px);
+            grid-template-rows: repeat(auto-fill, 50px);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0; /* Começa invisível na tela de boas-vindas */
+            transition: opacity 1s ease;
+        }
+
+        .grid-bg.active {
+            opacity: 1;
+            pointer-events: auto; /* Habilita interação apenas quando ativo */
+        }
+
+        .grid-square {
+            width: 50px;
+            height: 50px;
+            border: 0.1px solid rgba(255, 255, 255, 0.05); /* Cinza escuro/suave */
+            box-sizing: border-box;
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- STARS BACKGROUND --- */
+        #stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: black;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        /* --- SHOOTING STARS --- */
+        .shooting-star {
+            position: absolute;
+            background: linear-gradient(-45deg, #ffffff, rgba(0, 0, 255, 0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #ffffff);
+            animation: shooting-effect 3s ease-out forwards;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes shooting-effect {
+            0% { 
+                transform: translateX(0) translateY(0) rotate(45deg) scale(0); 
+                width: 0; 
+                opacity: 1;
+            }
+            10% {
+                scale: 1;
+                width: 150px;
+            }
+            100% { 
+                transform: translateX(1000px) translateY(1000px) rotate(45deg) scale(0); 
+                width: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px white; }
+        }
+
+        /* Garantir que o conteúdo ignore o mouse para o fundo brilhar, mas botões funcionem */
+        #typing-area, #design-page, #welcome-text, .typing-paragraph, #programming-title, #programming-desc {
+            pointer-events: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        #next-btn, .project-card, #theme-toggle, #design-next-btn, a {
+            pointer-events: auto !important; /* Elementos clicáveis continuam funcionando */
+        }
+
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Welcome Text 3D Animation with Glitch */
+        #welcome-text {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            opacity: 0;
+            z-index: 10;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+            filter: blur(25px);
+            text-align: center;
+            position: fixed; /* Mantém fixo no centro exato */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(-1200px) scale(0.05);
+            margin: 0;
+            width: 100%;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+            animation: glitch-anim2 1s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
+            5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.1deg); }
+            10% { clip: rect(62px, 9999px, 1px, 0); transform: skew(0.35deg); }
+            /* ... more steps ... */
+            100% { clip: rect(67px, 9999px, 62px, 0); transform: skew(0.6deg); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.15deg); }
+            /* ... steps ... */
+            100% { clip: rect(10px, 9999px, 30px, 0); transform: skew(0.8deg); }
+        }
+
+        .glitch-active {
+            animation: glitch-momentary 0.2s steps(2) infinite;
+        }
+
+        /* --- PROJECT SHOWCASE --- */
+        #project-showcase {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+            width: 100%;
+        }
+
+        #project-showcase.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            width: 320px;
+            text-align: center;
+            transition: all 0.4s ease;
+            animation: card-float 5s ease-in-out infinite;
+            backdrop-filter: blur(5px);
+            text-decoration: none; /* Remover sublinhado do link */
+            display: block; /* Ocupar espaço como bloco */
+            cursor: pointer;
+        }
+
+        .project-card:nth-child(2) {
+            animation-delay: -2.5s;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h4 {
+            margin: 0.5rem 0;
+            font-size: 1.2rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .project-card span {
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        @keyframes card-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes glitch-momentary {
+            0% { transform: translate(2px, 2px); filter: hue-rotate(90deg) brightness(2); }
+            50% { transform: translate(-2px, -2px); filter: hue-rotate(180deg) brightness(0.5); }
+            100% { transform: translate(0); filter: none; }
+        }
+
+        .animate-welcome {
+            animation: 
+                welcomeIn 5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards,
+                welcomeOut 1.5s cubic-bezier(0.7, 0, 0.3, 1) 6.5s forwards;
+        }
+
+        @keyframes welcomeIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) translateZ(-1200px) scale(0.05); filter: blur(25px); }
+            40% { opacity: 0.6; filter: blur(10px); }
+            90% { opacity: 1; transform: translate(-50%, -50%) translateZ(50px) scale(1.1); filter: blur(0); }
+            100% { opacity: 1; transform: translate(-50%, -50%) translateZ(0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes welcomeOut {
+            0% { transform: translate(-50%, -50%) translateX(0); opacity: 1; filter: blur(0); }
+            20% { transform: translate(-50%, -50%) translateX(-20%) skewX(-10deg); filter: blur(2px); }
+            100% { transform: translate(-50%, -50%) translateX(-200%) skewX(-40deg); opacity: 0; filter: blur(20px); }
+        }
+
+        /* Explosion Flash */
+        .flash {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* Typing Area */
+        #typing-area {
+            width: 100%;
+            max-width: 900px;
+            z-index: 15;
+            display: none;
+            flex-direction: column;
+            gap: 2.5rem;
+            text-align: center; /* Centraliza o texto */
+        }
+
+        .typing-paragraph {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            min-height: 1.5em;
+            position: relative;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            width: 100%;
+            border-left: 2px solid transparent;
+            padding-left: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .typing-paragraph.active {
+            border-left-color: var(--accent-blue);
+        }
+
+        .typing-paragraph::before {
+            display: none !important; /* Removido totalmente a barra azul */
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue);
+            margin-left: 5px;
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Next Button */
+        #next-btn {
+            margin-top: 4rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 1.2rem 3rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            pointer-events: none; /* Impede cliques quando invisível */
+        }
+
+        #next-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            border-color: rgba(59, 130, 246, 0.5);
+            pointer-events: auto; /* Habilita cliques quando visível */
+        }
+
+        #next-btn:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+            transform: translateY(-3px);
+        }
+
+        #next-btn svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: arrowFloat 2s infinite ease-in-out;
+        }
+
+        @keyframes arrowFloat {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(8px); }
+        }
+
+        #next-btn.shoot svg {
+            animation: arrowShoot 0.8s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+        }
+
+        @keyframes arrowShoot {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            100% { transform: translateX(500vw) scaleX(3); opacity: 0; }
+        }
+
+        /* --- DESIGN PAGE --- */
+        #design-page {
+            display: none;
+            padding: 3rem;
+            min-height: 100vh;
+            background: var(--bg-color);
+        }
+
+        /* --- DASHBOARD PAGE --- */
+        #dashboard-page {
+            display: none;
+            padding: 3rem;
+            min-height: 100vh;
+            background: var(--bg-color);
+            position: relative;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .profile-toggle {
+            background: var(--toolbar-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            padding: 0.6rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--neon-glow);
+        }
+
+        .profile-toggle:hover {
+            border-color: var(--accent-blue);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .profile-toggle svg {
+            filter: drop-shadow(0 0 5px var(--accent-blue));
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5rem;
+        }
+
+        /* Transition Effects */
+        .transition-active {
+            animation: pageTransition 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes pageTransition {
+            0% { filter: blur(30px) brightness(0); transform: scale(1.15); opacity: 0; }
+            100% { filter: blur(0) brightness(1); transform: scale(1); opacity: 1; }
+        }
+
+        .theme-toggle {
+            background: var(--toolbar-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            padding: 0.6rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none; /* Mantido oculto na página de design */
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.light-theme .theme-toggle {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme #next-btn,
+        body.light-theme #design-next-btn {
+            background: rgba(0, 0, 0, 0.04) !important;
+            color: #111 !important;
+            border-color: rgba(0, 0, 0, 0.14) !important;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        body.light-theme .dashboard-card {
+            background: var(--sales-card-bg);
+            border-color: var(--sales-card-border);
+        }
+
+        body.light-theme .dashboard-card h3 {
+            color: var(--sales-card-text) !important;
+        }
+
+        body.light-theme .dashboard-card p {
+            color: var(--sales-card-muted) !important;
+        }
+
+        body.light-theme .chat-trigger[data-service="Programação"] .card-icon {
+            background: rgba(37, 99, 235, 0.12) !important;
+            border-color: var(--sales-programming) !important;
+        }
+
+        body.light-theme .chat-trigger[data-service="Programação"] .card-icon svg,
+        body.light-theme .chat-trigger[data-service="Programação"] .card-footer {
+            color: var(--sales-programming) !important;
+            stroke: var(--sales-programming) !important;
+        }
+
+        body.light-theme .chat-trigger[data-service="Design"] .card-icon {
+            background: rgba(190, 24, 93, 0.12) !important;
+            border-color: var(--sales-design) !important;
+        }
+
+        body.light-theme .chat-trigger[data-service="Design"] .card-icon svg,
+        body.light-theme .chat-trigger[data-service="Design"] .card-footer {
+            color: var(--sales-design) !important;
+            stroke: var(--sales-design) !important;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Título Programação */
+        #programming-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-align: center; /* Centraliza título */
+            width: 100%;
+        }
+
+        #programming-desc {
+            font-size: 1.1rem;
+            color: #ffffff; /* Alterado para branco conforme solicitado */
+            margin-bottom: 2rem;
+            font-style: italic;
+            display: none;
+            opacity: 0;
+            width: 100%;
+            text-align: center; /* Centraliza descrição */
+        }
+
+        @keyframes titleReveal {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        /* --- STARS BACKGROUND (DASHBOARD ONLY) --- */
+        #stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: black;
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        .shooting-star {
+            position: absolute;
+            background: linear-gradient(-45deg, #ffffff, rgba(0, 0, 255, 0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #ffffff);
+            animation: shooting-effect 3s ease-out forwards;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px white; }
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* --- CHAT REAL-TIME STYLES --- */
+        .message {
+            max-width: 80%;
+            padding: 1rem 1.4rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+            animation: messageAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--accent-blue), #1e40af);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #1a1a1a;
+            color: #fff;
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .message-status {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 2px;
+            font-weight: 800;
+        }
+
+        .status-check {
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .status-check.delivered {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .status-check.read {
+            color: #34b7f1;
+            text-shadow: 0 0 10px rgba(52, 183, 241, 0.8);
+        }
+
+        /* Captcha Animation */
+        .captcha-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .captcha-box:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent-blue);
+        }
+
+        .captcha-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .captcha-box.verified .captcha-circle {
+            border-color: #22c55e;
+            background: #22c55e;
+        }
+
+        .captcha-circle::after {
+            content: '';
+            width: 10px;
+            height: 5px;
+            border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            transform: rotate(-45deg) scale(0);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .captcha-box.verified .captcha-circle::after {
+            transform: rotate(-45deg) scale(1);
+        }
+
+        .captcha-loading {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Real Emoji Picker Styling */
+        emoji-picker {
+            position: absolute;
+            bottom: 90px;
+            left: 20px;
+            z-index: 1000;
+            --background: #111111;
+            --border-color: rgba(255,255,255,0.1);
+            --indicator-color: var(--accent-blue);
+            display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Image Sending Preview */
+        .image-msg-preview {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-msg-preview:hover {
+            transform: scale(1.02);
+        }
+
+        #chat-input[placeholder]:empty:before {
+            content: attr(placeholder);
+            color: rgba(255,255,255,0.3);
+        }
+
+        .emoji-item {
+            cursor: pointer;
+            font-size: 1.4rem;
+            padding: 5px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .emoji-item:hover {
+            transform: scale(1.2);
+        }
+        .grid-square:hover {
+            background-color: #00ff41 !important; /* Totalmente Verde Glitch */
+            border-color: #00ff41 !important;
+            box-shadow: 0 0 20px #00ff41;
+            transition: none;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div class="grid-bg"></div>
+    <div id="intro-overlay">
+        <div class="particles-container" id="particles"></div>
+        <div class="flash" id="flash"></div>
+        
+        <!-- Main Intro Title -->
+        <h1 id="welcome-text">DarkByte</h1>
+
+        <!-- Content Area -->
+        <div id="typing-area">
+            <h2 id="programming-title">Programação</h2>
+            <div id="programming-desc" class="typing-paragraph"></div>
+            <div class="typing-paragraph" id="p1"></div>
+            <div class="typing-paragraph" id="p2"></div>
+            <div class="typing-paragraph" id="p3"></div>
+            <div class="typing-paragraph" id="p4"></div>
+
+            <!-- Showcase de Projetos -->
+             <div id="project-showcase">
+                 <a href="https://mysticonlineshop.vercel.app/" target="_blank" class="project-card">
+                     <span>E-COMMERCE</span>
+                     <img src="Imagens_da_DarkByte/mystic-store.jpg" alt="Mystic Store">
+                     <h4>Mystic Store</h4>
+                     <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 5px;">(Ambiente de Testes / Não Finalizado)</p>
+                 </a>
+                 <a href="https://wikimysticbuuixx.vercel.app/wiki.mystic.buuixx/#welcome" target="_blank" class="project-card">
+                     <span>DOCUMENTAÇÃO</span>
+                     <img src="Imagens_da_DarkByte/mystic-wiki.jpg" alt="Mystic Wiki">
+                     <h4>Mystic Wiki</h4>
+                     <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 5px;">(Ambiente de Testes / Não Finalizado)</p>
+                 </a>
+             </div>
+        </div>
+
+        <!-- Navigation -->
+        <button id="next-btn">
+            Próximo 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="next-arrow">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </button>
+
+        <!-- Interaction Hint -->
+        <div id="click-hint" style="position:absolute; bottom:3rem; color:rgba(255,255,255,0.4); font-size:1rem; z-index:100; font-weight: 500; letter-spacing: 1px;">CLIQUE PARA INICIAR A JORNADA</div>
+    </div>
+
+    <!-- DESIGN PAGE SECTION -->
+    <div id="design-page">
+        <header class="page-header">
+            <div style="font-size: 1.8rem; font-weight: 900; letter-spacing: -1px;">Dark<span style="color:var(--accent-blue)">Byte</span></div>
+            <!-- Botão de tema removido daqui pois agora estará no Dashboard -->
+        </header>
+        
+        <main>
+            <h1 style="font-size: 5rem; margin-bottom: 1.5rem; font-weight: 900; letter-spacing: -2px;">Design</h1>
+            <p style="font-size: 1.4rem; color: rgba(255,255,255,0.5); max-width: 600px; line-height: 1.6; margin-bottom: 3rem;">A nova era do desenvolvimento digital começa aqui. Projetos modernos, funcionais e com visual tecnológico profissional.</p>
+            
+            <!-- Botão Próximo na página Design -->
+            <button id="design-next-btn" style="
+                background: rgba(59, 130, 246, 0.1);
+                border: 1px solid var(--accent-blue);
+                color: #fff;
+                padding: 1rem 2.5rem;
+                border-radius: 10px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            ">
+                Próximo 
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </main>
+    </div>
+
+    <!-- DASHBOARD PAGE SECTION -->
+    <div id="dashboard-page">
+        <div class="dashboard-container">
+            <header class="dashboard-header">
+                <div style="font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px;">Dark<span style="color:var(--accent-blue)">Byte</span></div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="profile-toggle" id="owner-panel-btn" title="Painel administrativo" style="
+                        background: var(--toolbar-bg);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        color: var(--text-color);
+                        padding: 0.6rem;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        display: none;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.3s ease;
+                    ">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                            <path d="M9 9h6v6H9z"></path>
+                            <path d="M4 12h2M18 12h2M12 4v2M12 18v2"></path>
+                        </svg>
+                    </button>
+                    <button class="profile-toggle" id="profile-btn" style="
+                        background: var(--toolbar-bg);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        color: var(--text-color);
+                        padding: 0.6rem;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.3s ease;
+                    ">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </button>
+                    <button class="theme-toggle" id="theme-toggle" style="display: flex;">
+                        <svg class="sun-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+                </div>
+            </header>
+            
+            <main class="dashboard-grid">
+                <!-- Opção 1: Programação (Davi) -->
+                <div class="dashboard-card chat-trigger" data-target="Davi" data-service="Programação">
+                    <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; border: 1px solid var(--accent-blue);">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-size: 1.8rem; font-weight: 800;">Programação</h3>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; line-height: 1.5;">Faça um orçamento para seu projeto com o Davi!</p>
+                    <div class="card-footer" style="margin-top: 2rem; display: flex; align-items: center; color: var(--accent-blue); font-weight: 700; gap: 0.5rem;">
+                        CONECTAR AGORA <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </div>
+
+                <!-- Opção 2: Design (Nicolas) -->
+                <div class="dashboard-card chat-trigger" data-target="Nicolas" data-service="Design">
+                    <div class="card-icon" style="background: rgba(255, 0, 193, 0.1); width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; border: 1px solid #ff00c1;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ff00c1" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                    </div>
+                    <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-size: 1.8rem; font-weight: 800;">Design</h3>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; line-height: 1.5;">Faça um orçamento de design para seu projeto com o Nicolas!</p>
+                    <div class="card-footer" style="margin-top: 2rem; display: flex; align-items: center; color: #ff00c1; font-weight: 700; gap: 0.5rem;">
+                        CONECTAR AGORA <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="auth-modal" style="display: none; position: fixed; inset: 0; z-index: 30000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: all 0.5s ease;">
+        <div class="auth-container" style="position: relative; width: 100%; max-width: 470px; background: #0f0f0f; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; box-shadow: 0 25px 60px rgba(0,0,0,0.6); transform: translateY(20px); transition: all 0.5s ease;">
+            <header style="text-align: center;">
+                <h2 id="auth-title" style="font-size: 2rem; font-weight: 900; margin: 0; color: #fff;">Acesso DarkByte</h2>
+                <p id="auth-subtitle" style="color: rgba(255,255,255,0.45); margin-top: 0.4rem;">Crie conta, entre e valide captcha</p>
+            </header>
+            <button id="close-auth-modal" type="button" aria-label="Fechar modal" style="position:absolute; top:22px; right:22px; width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#fff; cursor:pointer; font-size:1.1rem; font-weight:700;">X</button>
+
+            <div style="display: flex; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.3rem; gap: 0.3rem;">
+                <button id="tab-signup" style="flex:1; border:none; border-radius:10px; background: var(--accent-blue); color:#fff; font-weight:700; padding:0.8rem; cursor:pointer;">Cadastro</button>
+                <button id="tab-login" style="flex:1; border:none; border-radius:10px; background: transparent; color:rgba(255,255,255,0.7); font-weight:700; padding:0.8rem; cursor:pointer;">Login</button>
+            </div>
+
+            <div id="auth-status" style="display:none; border-radius:12px; padding:0.8rem 1rem; font-size:0.9rem; font-weight:600;"></div>
+
+            <form id="signup-form" style="display:flex; flex-direction:column; gap:0.9rem;" autocomplete="off">
+                <input type="text" id="signup-fullname" placeholder="Nome completo" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+                <input type="email" id="signup-email" placeholder="Email" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+                <input type="password" id="signup-password" placeholder="Senha forte" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+                <input type="password" id="signup-confirm-password" placeholder="Confirme a senha" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+                <input type="text" id="signup-security-answer" placeholder="Pergunta de segurança: sua cor favorita?" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.9rem;">
+                    <div id="signup-captcha-question" style="font-size:0.92rem; color:rgba(255,255,255,0.8); margin-bottom:0.6rem;"></div>
+                    <div style="display:flex; gap:0.6rem;">
+                        <input type="text" id="signup-captcha-answer" placeholder="Resposta do captcha" style="flex:1; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:0.8rem; color:#fff;">
+                        <button type="button" id="refresh-signup-captcha" style="border:none; border-radius:10px; background:rgba(59,130,246,0.2); color:#fff; padding:0.8rem 1rem; cursor:pointer;">Trocar</button>
+                    </div>
+                </div>
+
+                <button id="signup-btn" type="submit" style="background:var(--accent-blue); color:#fff; border:none; padding:1rem; border-radius:12px; font-weight:800; font-size:1rem; cursor:pointer;">CRIAR CONTA</button>
+            </form>
+
+            <form id="login-form" style="display:none; flex-direction:column; gap:0.9rem;" autocomplete="off">
+                <input type="email" id="login-email" placeholder="Email" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+                <input type="password" id="login-password" placeholder="Senha" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:1rem; color:#fff; font-size:1rem; box-sizing:border-box;">
+
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.9rem;">
+                    <div id="login-captcha-question" style="font-size:0.92rem; color:rgba(255,255,255,0.8); margin-bottom:0.6rem;"></div>
+                    <div style="display:flex; gap:0.6rem;">
+                        <input type="text" id="login-captcha-answer" placeholder="Resposta do captcha" style="flex:1; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:0.8rem; color:#fff;">
+                        <button type="button" id="refresh-login-captcha" style="border:none; border-radius:10px; background:rgba(59,130,246,0.2); color:#fff; padding:0.8rem 1rem; cursor:pointer;">Trocar</button>
+                    </div>
+                </div>
+
+                <button id="login-submit-btn" type="submit" style="background:var(--accent-blue); color:#fff; border:none; padding:1rem; border-radius:12px; font-weight:800; font-size:1rem; cursor:pointer;">ENTRAR</button>
+            </form>
+        </div>
+    </div>
+    <div id="chat-modal" style="display: none; position: fixed; inset: 0; z-index: 20000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="chat-container" style="width: 100%; max-width: 500px; height: 80vh; background: #0f0f0f; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.1); transform: translateY(30px); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);">
+            
+            <!-- Chat Header -->
+            <header class="chat-header" style="padding: 1.2rem; background: #151515; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="avatar-container" style="position: relative;">
+                        <div id="chat-avatar" style="width: 45px; height: 45px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #fff;">D</div>
+                        <div style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: #22c55e; border: 2px solid #151515;"></div>
+                    </div>
+                    <div>
+                        <div id="chat-name" style="font-weight: 800; color: #fff; font-size: 1.1rem;">Davi</div>
+                        <div id="chat-status" style="font-size: 0.85rem; color: rgba(255,255,255,0.4); font-weight: 500;">Online</div>
+                    </div>
+                </div>
+                <button id="close-chat" style="background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; padding: 5px; transition: color 0.3s ease;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </header>
+
+            <!-- Chat Messages Area -->
+            <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: overlay; background-color: #0f0f0f; background-size: contain; background-opacity: 0.05;">
+                <!-- Messages will appear here -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; color: var(--accent-blue); font-style: italic; display: none; align-items: center; gap: 5px;">
+                <span id="typing-text">Davi está digitando</span>
+                <div class="typing-dots" style="display: flex; gap: 3px;">
+                    <div style="width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); animation: dotPulse 1.4s infinite;"></div>
+                    <div style="width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); animation: dotPulse 1.4s infinite 0.2s;"></div>
+                    <div style="width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); animation: dotPulse 1.4s infinite 0.4s;"></div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <footer class="chat-footer" style="padding: 1.2rem; background: #151515; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.8rem;">
+                <!-- Image Preview Container -->
+                <div id="image-preview-container" style="display: none; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 12px; position: relative;">
+                    <img id="image-preview" style="max-width: 100px; max-height: 100px; border-radius: 8px; object-fit: cover;">
+                    <button id="remove-image" style="position: absolute; top: -5px; right: -5px; background: #ef4444; border: none; color: #fff; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 12px;">✕</button>
+                </div>
+
+                <div style="display: flex; align-items: flex-end; gap: 0.8rem;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="emoji-btn" style="background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; transition: all 0.3s ease;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg></button>
+                        <button id="image-upload-btn" style="background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; transition: all 0.3s ease;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></button>
+                        <input type="file" id="image-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div style="flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 15px; padding: 0.8rem 1rem; min-height: 20px; max-height: 100px; overflow-y: auto;" contenteditable="true" id="chat-input" placeholder="Digite uma mensagem..."></div>
+                    
+                    <button id="send-message" style="width: 45px; height: 45px; border-radius: 50%; background: var(--accent-blue); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </footer >
+
+            <!-- Emoji Picker -->
+            <emoji-picker id="real-emoji-picker"></emoji-picker>
+        </div>
+    </div>
+
+    <!-- AUDIO ASSETS -->
+    <div id="audio-container" style="display: none;">
+        <audio id="sfx-welcome" src="./Sons_da_DarkByte/soundshelfstudio-cinematic-deep-sub-whoosh-541062.mp3"></audio>
+        <audio id="sfx-drone" src="./Sons_da_DarkByte/freesound_community-dark-drone-ambient-66071.mp3" loop></audio>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('intro-overlay');
+        const welcome = document.getElementById('welcome-text');
+        const typingArea = document.getElementById('typing-area');
+        const programmingTitle = document.getElementById('programming-title');
+        const programmingDesc = document.getElementById('programming-desc');
+        const nextBtn = document.getElementById('next-btn');
+        const arrow = document.getElementById('next-arrow');
+        const designPage = document.getElementById('design-page');
+        const themeBtn = document.getElementById('theme-toggle');
+        const flash = document.getElementById('flash');
+
+        // Audio Elements
+        const sfxWelcome = document.getElementById('sfx-welcome');
+        const sfxDrone = document.getElementById('sfx-drone');
+
+        const descText = "Desenvolvimento de sistemas e interfaces modernas com foco em performance e design.";
+        const texts = [
+            "Me chamo Davi e estudo programação há cerca de 2 anos e meio. Atualmente estou quase finalizando meu curso e durante esse período desenvolvi diversos projetos e sites modernos, incluindo o site WikiMysticBuuixx, além de outros trabalhos personalizados.",
+            "Estou anunciando que a DarkByte está aceitando serviços relacionados ao desenvolvimento digital. Crio sites modernos para pequenas empresas com valores acessíveis, sempre focando em desempenho, visual profissional e boa experiência para os usuários.",
+            "Também realizo outros trabalhos, como desenvolvimento de automações, criação de aplicativos, sistemas personalizados, ferramentas digitais e projetos sob encomenda.",
+            "Meu objetivo é transformar ideias em projetos modernos, funcionais e com visual tecnológico profissional."
+        ];
+
+        let hasStarted = false;
+
+        const designNextBtn = document.getElementById('design-next-btn');
+        const dashboardPage = document.getElementById('dashboard-page');
+
+        if (designNextBtn) {
+            designNextBtn.addEventListener('mouseenter', () => {
+                designNextBtn.style.background = 'rgba(59, 130, 246, 0.2)';
+                designNextBtn.style.boxShadow = '0 0 40px rgba(59, 130, 246, 0.4)';
+                designNextBtn.style.transform = 'translateY(-2px)';
+            });
+            designNextBtn.addEventListener('mouseleave', () => {
+                designNextBtn.style.background = 'rgba(59, 130, 246, 0.1)';
+                designNextBtn.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.2)';
+                designNextBtn.style.transform = 'translateY(0)';
+            });
+
+            // Transição para o Dashboard
+            designNextBtn.addEventListener('click', () => {
+                designPage.style.transition = 'all 1s ease';
+                designPage.style.opacity = '0';
+                designPage.style.transform = 'translateX(-100px)';
+                
+                // Desativar totalmente a grade de quadradinhos
+                document.querySelector('.grid-bg').style.display = 'none';
+
+                setTimeout(() => {
+                    designPage.style.display = 'none';
+                    
+                    // Ativar o tema espacial apenas no Dashboard
+                    const starsContainer = document.getElementById('stars-container');
+                    starsContainer.style.display = 'block';
+                    setTimeout(() => starsContainer.style.opacity = '1', 10);
+                    
+                    createDashboardStars();
+                    startDashboardShootingStars();
+
+                    dashboardPage.style.display = 'block';
+                    dashboardPage.style.opacity = '0';
+                    dashboardPage.animate([
+                        { opacity: 0, transform: 'translateX(100px)' },
+                        { opacity: 1, transform: 'translateX(0)' }
+                    ], { duration: 800, easing: 'ease-out', fill: 'forwards' });
+                }, 1000);
+            });
+        }
+
+        /**
+         * Create Stars for Dashboard
+         */
+        function createDashboardStars() {
+            const starsContainer = document.getElementById('stars-container');
+            starsContainer.innerHTML = ''; // Limpar anterior se houver
+            const numStars = 150;
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 2.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+                star.style.setProperty('--delay', `${Math.random() * 5}s`);
+                starsContainer.appendChild(star);
+            }
+        }
+
+        /**
+         * Shooting Stars Logic for Dashboard (2 every 5 seconds)
+         */
+        function startDashboardShootingStars() {
+            function spawn() {
+                // Criar 2 estrelas cadentes
+                for (let i = 0; i < 2; i++) {
+                    setTimeout(() => {
+                        const starsContainer = document.getElementById('stars-container');
+                        const star = document.createElement('div');
+                        star.classList.add('shooting-star');
+                        star.style.top = `${Math.random() * 40}%`;
+                        star.style.left = `${Math.random() * 100}%`;
+                        star.style.height = '2px';
+                        starsContainer.appendChild(star);
+                        setTimeout(() => star.remove(), 3000);
+                    }, i * 500); // Pequeno atraso entre as duas
+                }
+                
+                // Repetir a cada 5 segundos
+                setTimeout(spawn, 5000);
+            }
+            spawn();
+        }
+
+        /**
+         * Create floating background particles
+         */
+        function createAmbientParticles() {
+            // Criar a grade de quadradinhos interativos
+            const grid = document.querySelector('.grid-bg');
+            const numSquares = Math.ceil(window.innerWidth / 50) * Math.ceil(window.innerHeight / 50);
+            
+            for (let i = 0; i < numSquares; i++) {
+                const square = document.createElement('div');
+                square.classList.add('grid-square');
+                grid.appendChild(square);
+            }
+
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                const size = 1 + Math.random() * 2;
+                p.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: rgba(59, 130, 246, 0.3);
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    border-radius: 50%;
+                    pointer-events: none;
+                `;
+                container.appendChild(p);
+                
+                p.animate([
+                    { transform: 'translateY(0) scale(1)', opacity: 0 },
+                    { transform: `translateY(-${100 + Math.random() * 200}px) scale(0)`, opacity: 0.5 },
+                    { transform: `translateY(-${300 + Math.random() * 300}px) scale(1)`, opacity: 0 }
+                ], { 
+                    duration: 3000 + Math.random() * 5000, 
+                    iterations: Infinity,
+                    easing: 'ease-in-out'
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', createAmbientParticles);
+
+        /**
+         * Handle Initial Click to Start
+         */
+        document.addEventListener('click', () => {
+            if (hasStarted) return;
+            hasStarted = true;
+            document.getElementById('click-hint').style.display = 'none';
+            startExperience();
+        });
+
+        /**
+         * Main Intro Sequence
+         */
+        async function startExperience() {
+            // Stage 1: Welcome Entry (0s -> 5s)
+            welcome.setAttribute('data-text', 'Bem vindo a DarkByte');
+            welcome.classList.add('animate-welcome');
+            
+            // Audio: Cinematic Deep Sub Whoosh (Starts at 0s)
+            sfxWelcome.volume = 0.2; // Volume reduzido para 20%
+            sfxWelcome.currentTime = 0;
+            sfxWelcome.play();
+
+            // Audio: Dark Ambient Drone (Background)
+            sfxDrone.volume = 0.15; // Drone reduzido para 15% para ficar bem suave ao fundo
+            sfxDrone.play();
+
+            // Stage 2: Impact + Explosion (Trigger at 5s)
+            setTimeout(() => {
+                flash.animate([
+                    { opacity: 0.8 },
+                    { opacity: 0 } 
+                ], { duration: 600, easing: 'ease-out' });
+                
+                welcome.classList.add('glitch-active');
+                createImpactParticles();
+                
+                setTimeout(() => welcome.classList.remove('glitch-active'), 800);
+            }, 5000);
+
+            // Stage 3: Swipe Left (Trigger at 6.5s)
+            setTimeout(() => {
+                // Audio removido conforme solicitado
+            }, 6500);
+
+            // Stage 4: Main Text Typing (Starts at 8s -> 23s)
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                typingArea.style.display = 'flex';
+                overlay.classList.add('allow-scroll');
+                
+                // Ativar a grade interativa
+                document.querySelector('.grid-bg').classList.add('active');
+
+                // Iniciar sequência de digitação
+                runTypingSequence();
+            }, 8000);
+        }
+
+        /**
+         * Typing Logic for Paragraphs (Duration: 15s)
+         */
+        async function runTypingSequence() {
+            const titleText = "Programação";
+            const totalChars = titleText.length + descText.length + texts.reduce((acc, t) => acc + t.length, 0);
+            const targetDuration = 15000; // 15 seconds as requested
+            const msPerChar = targetDuration / totalChars;
+
+            // Digitar Título "Programação"
+            programmingTitle.style.display = 'block';
+            programmingTitle.style.opacity = '1';
+            programmingTitle.style.animation = 'none'; // Remover animação de revelação antiga
+            await typeText(titleText, 'programming-title', msPerChar);
+            await new Promise(r => setTimeout(r, 400));
+
+            // Digitar Descrição
+            programmingDesc.style.display = 'block';
+            programmingDesc.style.opacity = '1';
+            await typeText(descText, 'programming-desc', msPerChar);
+            await new Promise(r => setTimeout(r, 400));
+
+            // Digitar Parágrafos
+            for (let i = 0; i < texts.length; i++) {
+                const el = document.getElementById(`p${i + 1}`);
+                el.classList.add('active');
+                await typeText(texts[i], `p${i + 1}`, msPerChar);
+                el.classList.remove('active');
+                await new Promise(r => setTimeout(r, 300));
+            }
+
+            // Mostrar Showcase de Projetos
+            document.getElementById('project-showcase').classList.add('visible');
+
+            // Stage 5: Botão "Próximo" (Trigger at 23s mark)
+            showNextButton();
+        }
+
+        function showNextButton() {
+            nextBtn.classList.add('visible');
+        }
+
+        function typeText(text, elementId, speed) {
+            return new Promise(resolve => {
+                const el = document.getElementById(elementId);
+                el.textContent = ""; // Limpar texto inicial
+                let charIndex = 0;
+                
+                // Criar cursor para o elemento atual
+                const cursor = document.createElement('span');
+                cursor.classList.add('cursor');
+                el.appendChild(cursor);
+                
+                function type() {
+                    if (charIndex < text.length) {
+                        // Inserir o caractere antes do cursor
+                        cursor.before(text.charAt(charIndex));
+                        charIndex++;
+                        setTimeout(type, speed); 
+                    } else {
+                        // Remover cursor após finalizar a digitação do elemento
+                        cursor.remove();
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        /**
+         * Explosion Particles Effect
+         */
+        function createImpactParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 80; i++) {
+                const p = document.createElement('div');
+                const size = 2 + Math.random() * 4;
+                p.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${Math.random() > 0.5 ? '#fff' : 'var(--accent-blue)'};
+                    box-shadow: 0 0 10px var(--accent-blue);
+                    left: 50%;
+                    top: 50%;
+                    border-radius: 50%;
+                    z-index: 5;
+                `;
+                container.appendChild(p);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 200 + Math.random() * 500;
+                p.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
+                ], { duration: 1500, easing: 'cubic-bezier(0, .9, .1, 1)' });
+                
+                setTimeout(() => p.remove(), 1500);
+            }
+        }
+
+        // Elementos de Autenticação (Sistema Novo)
+        const authModal = document.getElementById('auth-modal');
+        const authContainer = document.querySelector('.auth-container');
+        const signupForm = document.getElementById('signup-form');
+        const loginForm = document.getElementById('login-form');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const profileBtn = document.getElementById('profile-btn');
+        const ownerPanelBtn = document.getElementById('owner-panel-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const loginSubmitBtn = document.getElementById('login-submit-btn');
+        const tabSignup = document.getElementById('tab-signup');
+        const tabLogin = document.getElementById('tab-login');
+        const closeAuthBtn = document.getElementById('close-auth-modal');
+        const authStatus = document.getElementById('auth-status');
+        const signupCaptchaQuestion = document.getElementById('signup-captcha-question');
+        const signupCaptchaAnswer = document.getElementById('signup-captcha-answer');
+        const loginCaptchaQuestion = document.getElementById('login-captcha-question');
+        const loginCaptchaAnswer = document.getElementById('login-captcha-answer');
+        const refreshSignupCaptchaBtn = document.getElementById('refresh-signup-captcha');
+        const refreshLoginCaptchaBtn = document.getElementById('refresh-login-captcha');
+        const chatModal = document.getElementById('chat-modal');
+        const chatName = document.getElementById('chat-name');
+        const chatAvatar = document.getElementById('chat-avatar');
+        const chatMessages = document.getElementById('chat-messages');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const typingText = document.getElementById('typing-text');
+        const closeChat = document.getElementById('close-chat');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-message');
+        const emojiBtn = document.getElementById('emoji-btn');
+        const imageBtn = document.getElementById('image-upload-btn');
+        const imageInput = document.getElementById('image-input');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const realEmojiPicker = document.getElementById('real-emoji-picker');
+        const emojiPicker = realEmojiPicker;
+
+        let signupCaptchaToken = null;
+        let loginCaptchaToken = null;
+        let currentSessionUser = null;
+        let pendingChatTarget = null;
+
+        // Protecao extra contra iframe embedding
+        if (window.top !== window.self) {
+            window.top.location = window.self.location.href;
+        }
+
+        // Protecao anti-inspecionar (deterrente no cliente)
+        function activateClientProtectionLock(reasonText) {
+            if (document.getElementById('protection-lock-screen')) return;
+            const lock = document.createElement('div');
+            lock.id = 'protection-lock-screen';
+            lock.style.cssText = `
+                position: fixed;
+                inset: 0;
+                z-index: 999999;
+                background: #000;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
+                font-family: Inter, sans-serif;
+                text-align: center;
+                padding: 24px;
+            `;
+            lock.innerHTML = `
+                <h2 style="margin:0; font-size:1.7rem;">Acesso protegido</h2>
+                <p style="margin:0; opacity:0.8; max-width:560px;">${reasonText}</p>
+                <p style="margin:0; opacity:0.55; font-size:0.92rem;">Feche as ferramentas de desenvolvedor e recarregue a pagina.</p>
+            `;
+            document.body.appendChild(lock);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function initAntiInspectGuards() {
+            document.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+            });
+
+            document.addEventListener('keydown', (event) => {
+                const key = event.key.toLowerCase();
+                const ctrlShift = event.ctrlKey && event.shiftKey;
+                const blocked =
+                    key === 'f12' ||
+                    (ctrlShift && (key === 'i' || key === 'j' || key === 'c')) ||
+                    (event.ctrlKey && key === 'u');
+                if (blocked) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    activateClientProtectionLock('Atalho de inspecao detectado e bloqueado.');
+                }
+            }, true);
+
+            setInterval(() => {
+                const widthGap = window.outerWidth - window.innerWidth > 160;
+                const heightGap = window.outerHeight - window.innerHeight > 160;
+                if (widthGap || heightGap) {
+                    activateClientProtectionLock('Ferramentas de desenvolvedor detectadas.');
+                }
+            }, 1000);
+        }
+
+        initAntiInspectGuards();
+
+        function openAuthModal(mode = 'signup') {
+            authModal.style.display = 'flex';
+            setTimeout(() => {
+                authModal.style.opacity = '1';
+                authContainer.style.transform = 'translateY(0)';
+            }, 10);
+            switchAuthMode(mode);
+        }
+
+        function closeAuthModal() {
+            authModal.style.opacity = '0';
+            authContainer.style.transform = 'translateY(20px)';
+            setTimeout(() => authModal.style.display = 'none', 500);
+        }
+
+        async function apiRequest(url, options = {}) {
+            const response = await fetch(url, {
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                ...options
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || 'Falha na comunicacao com o servidor.');
+            }
+            return payload;
+        }
+
+        async function loadCaptcha(mode) {
+            const payload = await apiRequest(`/api/auth/captcha?mode=${mode}`);
+            if (mode === 'signup') {
+                signupCaptchaToken = payload.captchaToken;
+                signupCaptchaQuestion.textContent = payload.question;
+                signupCaptchaAnswer.value = '';
+            } else {
+                loginCaptchaToken = payload.captchaToken;
+                loginCaptchaQuestion.textContent = payload.question;
+                loginCaptchaAnswer.value = '';
+            }
+        }
+
+        async function fetchSession() {
+            try {
+                const payload = await apiRequest('/api/auth/session');
+                currentSessionUser = payload.user;
+                syncAdminPanelButton();
+                return currentSessionUser;
+            } catch {
+                currentSessionUser = null;
+                syncAdminPanelButton();
+                return null;
+            }
+        }
+
+        function canOpenAdminPanel() {
+            const role = String(currentSessionUser?.role || '').toLowerCase();
+            return role === 'owner' || role === 'co-owner';
+        }
+
+        function syncAdminPanelButton() {
+            if (!ownerPanelBtn) return;
+            ownerPanelBtn.style.display = canOpenAdminPanel() ? 'flex' : 'none';
+        }
+
+        function showAuthStatus(message, kind = 'error') {
+            authStatus.style.display = 'block';
+            authStatus.textContent = message;
+            if (kind === 'success') {
+                authStatus.style.background = 'rgba(34, 197, 94, 0.15)';
+                authStatus.style.border = '1px solid rgba(34, 197, 94, 0.35)';
+                authStatus.style.color = '#86efac';
+            } else {
+                authStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+                authStatus.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+                authStatus.style.color = '#fca5a5';
+            }
+        }
+
+        function clearAuthStatus() {
+            authStatus.style.display = 'none';
+            authStatus.textContent = '';
+        }
+
+        async function refreshSignupCaptcha() {
+            await loadCaptcha('signup');
+        }
+
+        async function refreshLoginCaptcha() {
+            await loadCaptcha('login');
+        }
+
+        async function switchAuthMode(mode) {
+            if (mode === 'signup') {
+                signupForm.style.display = 'flex';
+                loginForm.style.display = 'none';
+                tabSignup.style.background = 'var(--accent-blue)';
+                tabSignup.style.color = '#fff';
+                tabLogin.style.background = 'transparent';
+                tabLogin.style.color = 'rgba(255,255,255,0.7)';
+                authTitle.textContent = 'Cadastro DarkByte';
+                authSubtitle.textContent = 'Crie sua conta com captcha';
+                await refreshSignupCaptcha();
+            } else {
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'flex';
+                tabLogin.style.background = 'var(--accent-blue)';
+                tabLogin.style.color = '#fff';
+                tabSignup.style.background = 'transparent';
+                tabSignup.style.color = 'rgba(255,255,255,0.7)';
+                authTitle.textContent = 'Login DarkByte';
+                authSubtitle.textContent = 'Entre com email, senha e captcha';
+                await refreshLoginCaptcha();
+            }
+            clearAuthStatus();
+        }
+
+        tabSignup.addEventListener('click', async () => switchAuthMode('signup'));
+        tabLogin.addEventListener('click', async () => switchAuthMode('login'));
+        closeAuthBtn.addEventListener('click', () => closeAuthModal());
+        refreshSignupCaptchaBtn.addEventListener('click', async () => refreshSignupCaptcha());
+        refreshLoginCaptchaBtn.addEventListener('click', async () => refreshLoginCaptcha());
+
+        profileBtn.addEventListener('click', async () => {
+            const session = await fetchSession();
+            if (session) {
+                showAuthStatus(`Voce ja esta logado como ${session.fullName}.`, 'success');
+                openAuthModal('login');
+                return;
+            }
+            openAuthModal('login');
+        });
+
+        ownerPanelBtn.addEventListener('click', () => {
+            window.open('/admin.html', '_blank');
+        });
+
+        // Validação de Senha Forte
+        function isPasswordStrong(pw) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+            return regex.test(pw);
+        }
+
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const fullName = document.getElementById('signup-fullname').value.trim();
+            const email = document.getElementById('signup-email').value;
+            const pw = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm-password').value;
+            const security = document.getElementById('signup-security-answer').value;
+            if (!fullName || !email || !pw || !confirm || !security) {
+                showAuthStatus('Preencha todos os campos do cadastro.');
+                return;
+            }
+            if (fullName.split(' ').filter(Boolean).length < 2) {
+                showAuthStatus('Informe nome completo (nome e sobrenome).');
+                return;
+            }
+            if (pw !== confirm) {
+                showAuthStatus('As senhas nao coincidem.');
+                return;
+            }
+            if (!isPasswordStrong(pw)) {
+                showAuthStatus('Senha fraca: use 8+ chars com maiuscula, minuscula, numero e simbolo.');
+                return;
+            }
+            try {
+                await apiRequest('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fullName,
+                        email,
+                        password: pw,
+                        confirmPassword: confirm,
+                        securityAnswer: security,
+                        captchaToken: signupCaptchaToken,
+                        captchaAnswer: signupCaptchaAnswer.value.trim()
+                    })
+                });
+                await fetchSession();
+                showAuthStatus('Conta criada com sucesso. Login realizado.', 'success');
+                signupForm.reset();
+                await refreshSignupCaptcha();
+                setTimeout(() => {
+                    closeAuthModal();
+                    if (pendingChatTarget) {
+                        openChatByTarget(pendingChatTarget);
+                        pendingChatTarget = null;
+                    }
+                }, 700);
+            } catch (error) {
+                showAuthStatus(error.message || 'Falha no cadastro.');
+                await refreshSignupCaptcha();
+            }
+        });
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pw = document.getElementById('login-password').value;
+
+            if (!email || !pw) {
+                showAuthStatus('Informe email e senha para login.');
+                return;
+            }
+
+            try {
+                await apiRequest('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email,
+                        password: pw,
+                        captchaToken: loginCaptchaToken,
+                        captchaAnswer: loginCaptchaAnswer.value.trim()
+                    })
+                });
+                await fetchSession();
+                showAuthStatus('Login realizado com sucesso.', 'success');
+                loginForm.reset();
+                await refreshLoginCaptcha();
+                setTimeout(() => {
+                    closeAuthModal();
+                    if (pendingChatTarget) {
+                        openChatByTarget(pendingChatTarget);
+                        pendingChatTarget = null;
+                    }
+                }, 700);
+            } catch (error) {
+                showAuthStatus(error.message || 'Falha no login.');
+                await refreshLoginCaptcha();
+            }
+        });
+        const removeImageBtn = document.getElementById('remove-image');
+        const chatContainerElement = document.querySelector('.chat-container');
+        const chatContainer = chatContainerElement;
+
+        // Configurações do Chat Real-time
+        let currentTarget = "";
+        let chatSessions = JSON.parse(localStorage.getItem('darkbyte_chats')) || {};
+
+        function openChatByTarget(target) {
+            currentTarget = target;
+            chatName.textContent = currentTarget;
+            chatAvatar.textContent = currentTarget.charAt(0);
+            chatAvatar.style.background = currentTarget === 'Davi' ? 'var(--accent-blue)' : '#ff00c1';
+            
+            chatMessages.innerHTML = '';
+            if (chatSessions[currentTarget]) {
+                chatSessions[currentTarget].forEach(msg => appendMessage(msg));
+            }
+            
+            chatModal.style.display = 'flex';
+            setTimeout(() => {
+                chatModal.style.opacity = '1';
+                chatContainerElement.style.transform = 'translateY(0)';
+            }, 10);
+
+            if (!chatSessions[currentTarget]) {
+                sendIAMessage(currentTarget);
+            }
+        }
+
+        // Abrir Chat (somente logado)
+        document.querySelectorAll('.chat-trigger').forEach(trigger => {
+            trigger.addEventListener('click', async () => {
+                const target = trigger.getAttribute('data-target');
+                const session = await fetchSession();
+                if (!session) {
+                    pendingChatTarget = target;
+                    openAuthModal('login');
+                    showAuthStatus('Para acessar o chat, faca login primeiro.');
+                    return;
+                }
+                openChatByTarget(target);
+            });
+        });
+
+        // Drag and Drop para Imagens
+        chatContainerElement.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            chatContainerElement.style.borderColor = 'var(--accent-blue)';
+        });
+
+        chatContainerElement.addEventListener('dragleave', () => {
+            chatContainerElement.style.borderColor = 'rgba(255,255,255,0.1)';
+        });
+
+        chatContainerElement.addEventListener('drop', (e) => {
+            e.preventDefault();
+            chatContainerElement.style.borderColor = 'rgba(255,255,255,0.1)';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleImageFile(file);
+            }
+        });
+
+        function handleImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreviewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Emoji Picker Real
+        emojiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            realEmojiPicker.style.display = realEmojiPicker.style.display === 'block' ? 'none' : 'block';
+        });
+
+        realEmojiPicker.addEventListener('emoji-click', event => {
+            chatInput.textContent += event.detail.unicode;
+            realEmojiPicker.style.display = 'none';
+        });
+
+        // Enviar Mensagem Real
+        function sendMessage() {
+            const text = chatInput.textContent.trim();
+            const hasImage = imagePreviewContainer.style.display === 'block';
+            
+            if (text === "" && !hasImage) return;
+
+            const message = {
+                id: Date.now(),
+                type: 'sent',
+                text: text,
+                image: hasImage ? imagePreview.src : null,
+                status: 'sent',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            appendMessage(message);
+            saveToHistory(currentTarget, message);
+            
+            chatInput.textContent = '';
+            imagePreviewContainer.style.display = 'none';
+            playSfx('send');
+
+            simulateStatusProgression(message.id);
+        }
+
+        function appendMessage(msg) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${msg.type}`;
+            messageEl.id = `msg-${msg.id}`;
+            
+            let content = '';
+            if (msg.image) {
+                content += `<img src="${msg.image}" class="image-msg-preview">`;
+            }
+            if (msg.text) {
+                content += `<div>${msg.text}</div>`;
+            }
+            
+            if (msg.type === 'sent') {
+                const checkHtml = msg.status === 'read' ? '✓✓' : (msg.status === 'delivered' ? '✓✓' : '✓');
+                const checkClass = msg.status === 'read' ? 'read' : (msg.status === 'delivered' ? 'delivered' : '');
+                content += `
+                    <div class="message-status">
+                        <span style="font-size: 0.65rem; margin-right: 5px; opacity: 0.5;">${msg.time}</span>
+                        <span class="status-check ${checkClass}">${checkHtml}</span>
+                    </div>`;
+            } else {
+                content += `<div style="font-size: 0.65rem; margin-top: 5px; opacity: 0.5;">${msg.time}</div>`;
+            }
+            
+            messageEl.innerHTML = content;
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function simulateStatusProgression(id) {
+            const el = document.getElementById(`msg-${id}`);
+            const check = el.querySelector('.status-check');
+
+            setTimeout(() => {
+                check.textContent = '✓✓';
+                check.classList.add('delivered');
+                updateHistoryStatus(id, 'delivered');
+                
+                setTimeout(() => {
+                    check.classList.add('read');
+                    updateHistoryStatus(id, 'read');
+                    playSfx('read');
+                    simulateAutoReply();
+                }, 2000);
+            }, 1500);
+        }
+
+        function saveToHistory(target, msg) {
+            if (!chatSessions[target]) chatSessions[target] = [];
+            chatSessions[target].push(msg);
+            localStorage.setItem('darkbyte_chats', JSON.stringify(chatSessions));
+        }
+
+        function updateHistoryStatus(id, status) {
+            if (chatSessions[currentTarget]) {
+                const msg = chatSessions[currentTarget].find(m => m.id === id);
+                if (msg) msg.status = status;
+                localStorage.setItem('darkbyte_chats', JSON.stringify(chatSessions));
+            }
+        }
+
+        function playSfx(type) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            if (type === 'send') {
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                gain.gain.setValueAtTime(0.05, ctx.currentTime);
+            } else if (type === 'read') {
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(900, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.03, ctx.currentTime);
+            } else if (type === 'typing') {
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                gain.gain.setValueAtTime(0.01, ctx.currentTime);
+            }
+            osc.start();
+            osc.stop(ctx.currentTime + 0.1);
+        }
+
+        function simulateAutoReply() {
+            setTimeout(() => {
+                typingText.textContent = `${currentTarget} está digitando`;
+                typingIndicator.style.display = 'flex';
+                playSfx('typing');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    const reply = {
+                        id: Date.now(),
+                        type: 'received',
+                        text: "Entendido! Recebi sua mensagem. Em breve eu ou alguém da equipe entrará em contato para alinhar os detalhes do seu orçamento. 🚀",
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    appendMessage(reply);
+                    saveToHistory(currentTarget, reply);
+                }, 3000);
+            }, 1000);
+        }
+
+        // Eventos de Digitação Real (Status "Usuário está digitando" simulado para a IA)
+        chatInput.addEventListener('input', () => {
+            if (chatInput.textContent.length > 0) {
+                // Aqui simularia o envio do status pro servidor
+            }
+        });
+
+        /**
+         * Final Transition to Design Page
+         */
+        nextBtn.addEventListener('click', () => {
+            nextBtn.classList.add('shoot');
+            
+            setTimeout(() => {
+                overlay.style.transition = 'all 2.5s cubic-bezier(0.7, 0, 0.3, 1)';
+                overlay.style.opacity = '0';
+                overlay.style.filter = 'blur(60px) brightness(2)';
+                overlay.style.transform = 'scale(1.1)';
+                
+                designPage.style.display = 'block';
+                designPage.classList.add('transition-active');
+            }, 500);
+
+            setTimeout(() => {
+                // Remove apenas o conteúdo da intro, mas mantém a grade
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                
+                // Forçar a ativação da grade na página de Design
+                document.querySelector('.grid-bg').style.display = 'grid';
+                document.querySelector('.grid-bg').classList.add('active');
+
+                // Abrir cadastro automaticamente se ainda nao estiver logado
+                fetchSession().then((session) => {
+                    if (!session) {
+                        openAuthModal('signup');
+                    }
+                });
+            }, 3000);
+        });
+
+        // Fechar Chat
+        closeChat.addEventListener('click', () => {
+            chatModal.style.opacity = '0';
+            chatContainer.style.transform = 'translateY(30px)';
+            setTimeout(() => chatModal.style.display = 'none', 500);
+        });
+
+        // Enviar Mensagem do Usuário
+        function sendMessage() {
+            const text = chatInput.textContent.trim();
+            const hasImage = imagePreviewContainer.style.display === 'block';
+            
+            if (text === "" && !hasImage) return;
+
+            const messageId = Date.now();
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message sent';
+            messageEl.id = `msg-${messageId}`;
+            
+            let content = '';
+            if (hasImage) {
+                content += `<img src="${imagePreview.src}" style="max-width: 100%; border-radius: 10px; margin-bottom: 5px; display: block;">`;
+            }
+            content += `<div>${text}</div>`;
+            content += `<div class="message-status"><span class="status-check">✓</span></div>`;
+            
+            messageEl.innerHTML = content;
+            chatMessages.appendChild(messageEl);
+            
+            // Limpar Input
+            chatInput.textContent = '';
+            imagePreviewContainer.style.display = 'none';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simular Status ✓✓ e Visualizado
+            setTimeout(() => {
+                const check = messageEl.querySelector('.status-check');
+                check.textContent = '✓✓';
+                setTimeout(() => {
+                    check.classList.add('blue');
+                    // Simular resposta do Davi/Nicolas após visualizar
+                    simulateTyping(currentTarget);
+                }, 1500);
+            }, 1000);
+        }
+
+        async function sendIAMessage(target) {
+            simulateTyping(target, true);
+            const msg = `Olá, eu sou a IA da DarkByte. O ${target} já responderá sua mensagem e falará com você em breve. Peço apenas que evite enviar muitas mensagens seguidas, pois existem outras pessoas na fila. Agradecemos sua compreensão e paciência. Obrigado!`;
+            
+            setTimeout(async () => {
+                typingIndicator.style.display = 'none';
+                const messageEl = document.createElement('div');
+                messageEl.className = 'message received';
+                chatMessages.appendChild(messageEl);
+                
+                // Efeito de digitação da IA
+                let i = 0;
+                const speed = 30;
+                function type() {
+                    if (i < msg.length) {
+                        messageEl.textContent += msg.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+                type();
+            }, 2000);
+        }
+
+        function simulateTyping(name, isIA = false) {
+            typingText.textContent = `${name} está digitando`;
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (!isIA) {
+                setTimeout(() => typingIndicator.style.display = 'none', 3000);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Emojis
+        const emojis = ['😀', '😂', '😎', '😍', '👍', '🔥', '🚀', '💻', '🎨', '✨', '⚡', '🤖'];
+        emojis.forEach(emoji => {
+            const span = document.createElement('span');
+            span.className = 'emoji-item';
+            span.textContent = emoji;
+            span.onclick = () => {
+                chatInput.textContent += emoji;
+                emojiPicker.style.display = 'none';
+            };
+            emojiPicker.appendChild(span);
+        });
+
+        emojiBtn.addEventListener('click', () => {
+            emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'grid' : 'none';
+        });
+
+        // Imagens
+        imageBtn.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (re) => {
+                    imagePreview.src = re.target.result;
+                    imagePreviewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        removeImageBtn.addEventListener('click', () => {
+            imagePreviewContainer.style.display = 'none';
+            imageInput.value = '';
+        });
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            
+            // Alternar ícone entre Sol e Lua
+            const isLight = document.body.classList.contains('light-theme');
+            if (isLight) {
+                // Mudar para ícone de Lua (Dark Moon)
+                themeBtn.innerHTML = `<svg class="moon-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+                // No tema claro, as estrelas cadentes podem ficar menos visíveis, mas o fundo do container deve mudar
+                document.getElementById('stars-container').style.background = 'white';
+            } else {
+                // Mudar para ícone de Sol (Bright Sun)
+                themeBtn.innerHTML = `<svg class="sun-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+                document.getElementById('stars-container').style.background = 'black';
+            }
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 5a62df3a7df6c630396506a34f0c4b65311fd19d
