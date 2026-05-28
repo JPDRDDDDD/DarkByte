@@ -1,0 +1,25 @@
+{
+  "teste@example.com": {
+    "fullName": "Teste Usuario",
+    "email": "teste@example.com",
+    "passwordHash": "scrypt$Hfp8S1dtyp+/0+USzzeHBg==$DVEuGsXqTPjfjKFEEsvjg4WNXGPOFBeEaNgD61n4p0fHVWQjHbe0x/TGGl5ukYFA5Kzq8VmOlNiGjo0N+bO/ug==",
+    "securityHash": "scrypt$og7aaI92GOBLqjBsoZmcWA==$b+uzogC97e0tJxlC9MpwtCKG3cbmkN8n5MDRazXK5tm/iR6gMzIstltCyjuN/2mZbX/8hacTzjV/aEqLQENq1A==",
+    "createdAt": 1779944366486
+  },
+  "davifeitoza137@gmail.com": {
+    "fullName": "Davi Feitoza",
+    "email": "davifeitoza137@gmail.com",
+    "role": "owner",
+    "passwordHash": "scrypt$PUnmD23lbB89gbEwXYieYA==$NYnkwxHGVVPETtCXt13bXnGdl9hrAAzlBrJ7358ohi41zxZhKp9WP5rI1vU7oPfKT9ccD9iuEqnrDTSbvUst0A==",
+    "securityHash": "scrypt$Yjo4AvLELvBccM30cwHfIQ==$BHw99Oou2Zlda7xLuEwahisK2lKA8GEZ2q9GJu6UOYFy9m6i+NTqWKD5dIuhKNNBgR8u+JWdPrF+VTEAeGexLw==",
+    "createdAt": 1779944519019
+  },
+  "s99736602@gmail.com": {
+    "fullName": "David souza",
+    "email": "s99736602@gmail.com",
+    "role": "cliente",
+    "passwordHash": "scrypt$7FH1Egjb0e6496wlVHqKGw==$BoM1LsqO3A28dtW8g7+4H3xLSpJuCUyAnb4kxLENiYgmdygV5gW8lmq1leBlOwp8JIAAdLAK0WRxW5ehW4zVXw==",
+    "securityHash": "scrypt$6R0owfyCTdR8Id+g2UJpqg==$9O6gH1RNtrbEvSmul58WsyGjQHNB2AYhSrtWKcmnRJykzksaciLJyQ1I5yZIELdVAchrjvabowRn2z496KPKlg==",
+    "createdAt": 1779944552441
+  }
+}
