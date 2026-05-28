@@ -1,0 +1,20 @@
+{
+  "name": "site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests configured\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0"
+  }
+}
